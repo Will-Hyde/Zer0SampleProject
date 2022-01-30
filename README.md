@@ -16,6 +16,10 @@ Within my Azure profile, I have created these resources to host and run the app:
 
 Inside the project, I have used Entity Framework to map out the database entities in code. This allows me to query on them from using Lambda functions, treating them like normal C# linq objects. This step wasnt necessary to set up for a snall project like this, but it I think its a good practice to implement for long term projects.
 
+I've kept the authentication portion very simple, mostly to save time. I'm just storing a raw string passphrase in the database and comparing it to what a user supplies in a web request. If this project was for practical business use, I would take the effort to implement a real authentication system (Such as storing hashed/salted passwords in the database, or use JWTs to handle authentication)
+
+Also, I've kept the database connection string in the project to allow people to develop locally. Normally I would take it out and replace it with an Azure Keyvault reference to protect it.
+
 #### Sending Requests to Hosted Azure API:
 I have hosted the API on azure using azure API Manager, below are some sample web requests you can use to test it.
 ###### Sample Postman Requests:
