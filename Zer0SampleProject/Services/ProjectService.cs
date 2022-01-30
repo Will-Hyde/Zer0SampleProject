@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Zer0SampleProject.Models;
+using static Zer0SampleProject.Constants;
 
 namespace Zer0SampleProject.Services
 {
@@ -22,11 +23,19 @@ namespace Zer0SampleProject.Services
         /// </summary>
         /// <param name="userId">UserId of the requesting user</param>
         /// <returns></returns>
-        public ICollection<ProjectResponse> GetProjects(int? userId = null)
+        public ICollection<ProjectResponse> GetProjects(int requestingUserId, int filterUser, int filterType, int filterStatus)
         {
             try
             {
-                return _db.Projects.Include(p => p.UserProject).ThenInclude(up => up.User).Select(p => ProjectToProjectResponse(p, userId)).ToList();
+                var projects = _db.Projects.Include(p => p.UserProject).ThenInclude(up => up.User);
+                //Filter by users, make sure that the private results are not returned if the user is not present in the group. 
+                if (filterUser > 0) projects = projects.Where(p => p.UserProject.Any(u => u.UserId == filterUser) && (p.Visibility == Visibility.Public || p.UserProject.Any(u => u.UserId == requestingUserId))).Include(p => p.UserProject).ThenInclude(up => up.User);
+                //Filter by project type
+                if (filterType > 0) projects = projects.Where(p => p.Format == (Format)filterType).Include(p => p.UserProject).ThenInclude(up => up.User);
+                //Filter by project status
+                if (filterStatus > 0) projects = projects.Where(p => p.Status == (Status)filterStatus).Include(p => p.UserProject).ThenInclude(up => up.User);
+
+                return projects.Select(p => ProjectToProjectResponse(p, requestingUserId)).ToList();
             } catch (Exception ex)
             {
                 _logger.LogError(String.Format(@"Exception thrown while retrieving projects, message: {0}", ex.Message.ToString()));
@@ -54,10 +63,10 @@ namespace Zer0SampleProject.Services
             }
         }
 
-        private static ProjectResponse ProjectToProjectResponse( Project project, int? userId)
+        private static ProjectResponse ProjectToProjectResponse( Project project, int userId)
         {
             var response = new ProjectResponse();
-            if (userId != null && project.UserProject.Any(x => x.UserId == userId) || project.Visibility == Constants.Visibility.Public)
+            if (userId != 0 && project.UserProject.Any(x => x.UserId == userId) || project.Visibility == Constants.Visibility.Public)
             {
                 response.Name = project.Name;
                 response.Description = project.Description;

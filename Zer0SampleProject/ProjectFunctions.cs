@@ -32,9 +32,13 @@ namespace Zer0SampleProject
         {
             log.LogInformation(String.Format("GetProjectsPrivate function processed a request for User: {0}", user));
             _ = int.TryParse(user, out var userId);
-            if( _projectService.VerifyUserAuth(userId, auth))
-            {
-                return new OkObjectResult(_projectService.GetProjects(userId));
+            _ = int.TryParse(req.Query["User"], out var filterUser);
+            _ = int.TryParse(req.Query["Type"], out var filterType);
+            _ = int.TryParse(req.Query["Status"], out var filterStatus);
+
+            if ( _projectService.VerifyUserAuth(userId, auth))
+            { 
+                return new OkObjectResult(_projectService.GetProjects(userId, filterUser, filterType, filterStatus));
             } else
             {
                 return new UnauthorizedResult();
@@ -52,8 +56,11 @@ namespace Zer0SampleProject
             [HttpTrigger(AuthorizationLevel.Function, "get", Route = "projects")] HttpRequest req,
             ILogger log)
         {
+            _ = int.TryParse(req.Query["User"], out var filterUser);
+            _ = int.TryParse(req.Query["Type"], out var filterType);
+            _ = int.TryParse(req.Query["Status"], out var filterStatus);
             log.LogInformation("GetProjectsPublic function processed a request from an anonymous user");
-            return new OkObjectResult(_projectService.GetProjects());
+            return new OkObjectResult(_projectService.GetProjects(0, filterUser, filterType, filterStatus));
         }
     }
 }
