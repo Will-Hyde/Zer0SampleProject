@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using static Zer0SampleProject.Constants;
 
@@ -7,11 +6,8 @@ namespace Zer0SampleProject
 {
 	public class Project
 	{
-		public Project()
-		{
-		}
+		public Project(){}
 
-		[Key]
 		public int ProjectId { get; set; }
 		[Column("ProjectFormatTypeId")]
 		public Format Format { get; set; }

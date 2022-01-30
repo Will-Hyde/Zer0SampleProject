@@ -5,9 +5,7 @@ namespace Zer0SampleProject.Models
 {
     public class ProjectResponse
 	{
-		public ProjectResponse()
-		{
-		}
+		public ProjectResponse(){}
 
 		public string Name { get; set; }
 		public string Description { get; set; }

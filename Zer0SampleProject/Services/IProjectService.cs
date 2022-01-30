@@ -10,5 +10,6 @@ namespace Zer0SampleProject.Services
     public interface IProjectService
     {
         public ICollection<ProjectResponse> GetProjects(int? userId = 0);
+        public bool VerifyUserAuth(int userId, string auth);
     }
 }

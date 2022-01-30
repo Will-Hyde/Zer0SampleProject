@@ -16,6 +16,12 @@ namespace Zer0SampleProject.Services
             _db = db;
             _logger = logger;
         }
+
+        /// <summary>
+        /// Gets a list of projects, censoring private project information based on the user passed in
+        /// </summary>
+        /// <param name="userId">UserId of the requesting user</param>
+        /// <returns></returns>
         public ICollection<ProjectResponse> GetProjects(int? userId = null)
         {
             try
@@ -24,6 +30,26 @@ namespace Zer0SampleProject.Services
             } catch (Exception ex)
             {
                 _logger.LogError(String.Format(@"Exception thrown while retrieving projects, message: {0}", ex.Message.ToString()));
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a user object by userId and verifies the auth string matches the users authentication phrase
+        /// </summary>
+        /// <param name="userId">Id of user</param>
+        /// <param name="auth">User specific authentication string</param>
+        /// <returns></returns>
+        public bool VerifyUserAuth(int userId, string auth)
+        {
+            try
+            {
+                var user = _db.Users.Where(u => u.UserId == userId).FirstOrDefault();
+                return user.AuthenticationKey == auth;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(String.Format(@"Exception thrown while authenticating user, message: {0}", ex.Message.ToString()));
                 throw;
             }
         }
