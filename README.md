@@ -42,6 +42,15 @@ curl -X GET \
   -H 'ocp-apim-subscription-key: a39e9ae11bda4e0dbb1ac7176c83f76a' \
   -H 'postman-token: 6eb1f77c-0ab4-e43f-4c0b-88ec29f27c02'
 ```
+
+Get Private Projects, filtering by User Status and Type
+```
+curl -X GET \
+  'https://zer0-apim.azure-api.net/projects/user/1/auth/123456?Status=3&User=1&Type=3' \
+  -H 'cache-control: no-cache' \
+  -H 'ocp-apim-subscription-key: a39e9ae11bda4e0dbb1ac7176c83f76a' \
+  -H 'postman-token: eaac945a-0f39-f579-0112-d635526ee88c'
+```
 **Useful user info you can use to test with:**
 - Will Hyde (UserId: 1, AuthenticationKey: '123456') This one belongs to all projects, except one
 - Imaginary Person (UserId: 12, AuthenticationKey: 'null') This one shouldnt belong to any projects
