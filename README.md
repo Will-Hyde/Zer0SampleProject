@@ -7,6 +7,15 @@ Overall, I have implemented Visibility, Status, and Type as their own individual
 
 The database is hosted in Azure, and normally I would lock it down with firewall restrictions to prevent external access, I have left this open so that others can pull down the project and test it locally.
 
+#### Project Design:
+I decided to implement this API using Azure Functions. Because I really enjoy working with Azure, and I think it satisfies the requirements for the project perfectly.
+Within my Azure profile, I have created these resources to host and run the app:
+- Zer0 Function App - This is an Azure function app that allows the hosting of the logic behind the API endpoints. Each one is serverless, and able to be scaled independently.
+- Zer0 APIM - An API manager that is used to create the public facing API endpoints, and set up any needed rules, authentication, cacheing and load balancing
+- Zer0 Database - A SQL database that is used to preserve the project data
+
+Inside the project, I have used Entity Framework to map out the database entities in code. This allows me to query on them from using Lambda functions, treating them like normal C# linq objects. This step wasnt necessary to set up for a snall project like this, but it I think its a good practice to implement for long term projects.
+
 #### Sending Requests to Hosted Azure API:
 I have hosted the API on azure using azure API Manager, below are some sample web requests you can use to test it.
 ###### Sample Postman Requests:
